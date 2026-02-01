@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEBAĆ SP10</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Orbitron', sans-serif;
+        overflow: hidden;
+        transition: background 0.5s, color 0.5s;
+        background: #000000;
+        color: white;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    body.black-mode { background: #000000; color: rgb(151, 151, 151); }
+    body.white-mode { background: #ffffff; color: black; }
+
+    .container { text-align: center; position: relative; z-index: 2; }
+    h1 { font-size: 3em; margin-bottom: 30px; }
+
+    .btn {
+        padding: 20px 50px;
+        font-size: 1.5em;
+        text-decoration: none;
+        background: linear-gradient(45deg,#000000,#ffffff);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 0 20px #ffffff;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .btn:hover { transform: scale(1.1); box-shadow: 0 0 30px #5e5d5d, 0 0 40px #1100ff; }
+
+    /* Poziomy pstryczek */
+    .switch {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 150px;
+        height: 50px;
+        background: #444;
+        border-radius: 25px;
+        cursor: pointer;
+        box-shadow: 0 0 10px #222, 0 0 15px rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 0;
+        z-index: 3;
+    }
+
+    .toggle {
+        position: absolute;
+        top: 45%;
+        transform: translate(-50%, -50%);
+        transition: left 0.3s ease;
+        user-select: none;
+        font-size: 39px; /* większa emotka */
+    }
+
+    /* Gwiazdki */
+    .star {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: twinkle 2s infinite;
+        pointer-events: none;
+        transition: background 0.5s;
+    }
+
+    @keyframes twinkle {
+        0%,100% { opacity: 0.8; }
+        50% { opacity: 0.2; }
+    }
+</style>
+</head>
+<body class="black-mode">
+
+<div class="switch">
+    <div class="toggle">🌑</div>
+</div>
+
+<div class="container">
+    <h1>JEBAC DOMARADZKA.</h1>
+    <a class="btn" href="https://pl.pornhub.com/view_video.php?viewkey=ph63050b689e585" target="_blank">
+        Kliknij jak jebiesz Domaradzka!<span>🖕🖕🖕🖕</span>
+    </a>
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
+
+<script>
+    const body = document.body;
+    const switchEl = document.querySelector('.switch');
+    const toggle = document.querySelector('.toggle');
+    const clickSound = document.getElementById('clickSound');
+
+    // Gwiazdki
+    let stars = [];
+    const numStars = 100;
+
+    function createStars(){
+        clearStars();
+        for(let i=0;i<numStars;i++){
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.width = star.style.height = Math.random()*3 + 1 + 'px';
+            star.style.top = Math.random()*100 + 'vh';
+            star.style.left = Math.random()*100 + 'vw';
+            star.style.background = 'white';
+            star.style.animationDuration = 1 + Math.random()*3 + 's';
+            body.appendChild(star);
+            stars.push(star);
+        }
+    }
+
+    function updateStarColors(){
+        const color = body.classList.contains('black-mode') ? 'white' : 'black';
+        stars.forEach(s => s.style.background=color);
+    }
+
+    function clearStars(){ stars.forEach(s=>s.remove()); stars=[]; }
+
+    createStars();
+
+    // Tryby
+    const modes = ['black', 'white'];
+    const emojis = ['🌑','⚪'];
+    let index = 0;
+
+    function updateTogglePosition() {
+        const padding = 25; // margines wewnątrz paska
+        const trackWidth = switchEl.clientWidth - 2*padding;
+        const step = trackWidth / (modes.length - 1);
+        toggle.style.left = padding + step*index + 'px';
+    }
+
+    switchEl.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+
+        // Przełącz tryb
+        index = (index + 1) % modes.length;
+        body.className = modes[index] + '-mode';
+        toggle.textContent = emojis[index];
+
+        updateTogglePosition();
+        updateStarColors();
+    });
+
+    // Ustawienie początkowej pozycji
+    updateTogglePosition();
+</script>
+
+</body>
+</html>
